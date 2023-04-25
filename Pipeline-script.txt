@@ -1,7 +1,7 @@
 def img
 pipeline {
     environment {
-        registry = "kss7/python-jenkins" //To push an image to Docker Hub, you must first name your local image using your Docker Hub username and the repository name that you created through Docker Hub on the web.
+        registry = "ayangezy/python-jenkins" //To push an image to Docker Hub, you must first name your local image using your Docker Hub username and the repository name that you created through Docker Hub on the web.
         registryCredential = 'docker-hub-login'
         dockerImage = ''
     }
@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('checkout') {
             steps {
-                git 'https://github.com/kss7/SimpleFlaskUI.git'
+                git 'https://github.com/ayangzy/Simple-Flask-CICD-Demo-App.git'
             }
         }
 
@@ -60,16 +60,16 @@ pipeline {
                     def drun = "docker run -d --name ${JOB_NAME} -p 5000:5000 ${img}"
                     println "${drun}"
                     sshagent(['docker-test']) {
-                        sh returnStatus: true, script: "ssh -o StrictHostKeyChecking=no docker@192.168.1.16 ${stopcontainer} "
-                        sh returnStatus: true, script: "ssh -o StrictHostKeyChecking=no docker@192.168.1.16 ${delcontName}"
-                        sh returnStatus: true, script: "ssh -o StrictHostKeyChecking=no docker@192.168.1.16 ${delimages}"
+                        sh returnStatus: true, script: "ssh -o StrictHostKeyChecking=no deploy@192.168.56.55 ${stopcontainer} "
+                        sh returnStatus: true, script: "ssh -o StrictHostKeyChecking=no deploy@192.168.56.55 ${delcontName}"
+                        sh returnStatus: true, script: "ssh -o StrictHostKeyChecking=no deploy@192.168.56.55 ${delimages}"
 
                     // some block
-                        sh "ssh -o StrictHostKeyChecking=no docker@192.168.1.16 ${drun}"
+                        sh "ssh -o StrictHostKeyChecking=no deploy@192.168.56.55 ${drun}"
                     }
                 }
             }
         }
 
-
+    }
     }
